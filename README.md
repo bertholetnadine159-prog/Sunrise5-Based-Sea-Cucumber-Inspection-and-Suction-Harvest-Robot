@@ -2,6 +2,13 @@
 
 Team: Shenhai Electromagnetic Force
 
+## 项目相关开源仓库
+
+本项目由多个开源仓库共同组成，以下两个链接也是本项目的重要组成部分：
+
+- [Model-weight-conversion](https://github.com/bertholetnadine159-prog/Model-weight-conversion)：海参 YOLO11 分割模型的 ONNX 导出、RDK/Horizon BIN 转换和端侧部署。
+- [Sea-Cucumber-Inspection-Harvest-Robot-Management-Interface](https://github.com/bertholetnadine159-prog/Sea-Cucumber-Inspection-Harvest-Robot-Management-Interface)：海参检测及吸捕机器人管理界面、视频回传、数据看板和上位机控制系统。
+
 本仓库面向“水下海参检测及吸捕机器人”项目，包含两类内容：
 
 - `sea_cucumber_robot/`：新整理的完整工程化代码项目，包含配置、传感器、视觉分割、Pixhawk 控制、推进器混控、吸捕流程、状态机、脚本和测试。
@@ -100,7 +107,7 @@ DS18B20_2 的接线说明存在歧义，配置中保留 `power_pin: 17`、`data_
 
 ## 模型与界面协同
 
-本项目与另外两个开源仓库配合使用：
+上面的两个项目仓库提供模型转换和上位机界面能力：
 
 - [Model-weight-conversion](https://github.com/bertholetnadine159-prog/Model-weight-conversion)：YOLO11 分割模型 ONNX 导出、RDK/Horizon BIN 转换和部署说明。
 - [Sea-Cucumber-Inspection-Harvest-Robot-Management-Interface](https://github.com/bertholetnadine159-prog/Sea-Cucumber-Inspection-Harvest-Robot-Management-Interface)：Flutter 机器人管理界面、Python 推理后端、WebSocket 视频回传和桌面/移动端控制页面。

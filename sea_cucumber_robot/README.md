@@ -1,5 +1,12 @@
 # 水下海参检测及吸捕机器人完整代码项目
 
+## 项目相关开源仓库
+
+本项目由多个开源仓库共同组成，以下两个链接也是本项目的重要组成部分：
+
+- [Model-weight-conversion](https://github.com/bertholetnadine159-prog/Model-weight-conversion)：海参 YOLO11 分割模型的 ONNX 导出、RDK/Horizon BIN 转换和端侧部署。
+- [Sea-Cucumber-Inspection-Harvest-Robot-Management-Interface](https://github.com/bertholetnadine159-prog/Sea-Cucumber-Inspection-Harvest-Robot-Management-Interface)：海参检测及吸捕机器人管理界面、视频回传、数据看板和上位机控制系统。
+
 本项目面向 RDK_X5 + Pixhawk 2.4.8 的水下海参检测及负压吸捕机器人，包含传感器读取、摄像头管理、海参分割检测、mask 对中、推进器混控、Pixhawk MAVLink 输出、吸捕电机控制和自动任务状态机。
 
 ## 目录结构
