@@ -1,0 +1,10 @@
+__pycache__/
+*.py[cod]
+*.log
+*.csv
+seg_results/
+outputs/
+logs/
+*.mp4
+*.avi
+pixhawk_direct_water_latest.png
