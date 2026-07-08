@@ -5,6 +5,8 @@ __pycache__/
 seg_results/
 outputs/
 logs/
+!sea_cucumber_robot/logs/
+!sea_cucumber_robot/logs/.gitkeep
 *.mp4
 *.avi
 pixhawk_direct_water_latest.png

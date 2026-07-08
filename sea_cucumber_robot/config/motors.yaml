@@ -1,0 +1,116 @@
+pixhawk_outputs:
+  # Red triangle in the mechanical drawing is treated as +X / forward.
+  # All positions are in robot body frame meters: x forward, y right, z down.
+  # Direction vectors are the force direction for positive motor command.
+  # Tune these values to the real thruster layout before wet testing.
+  main_out:
+    - motor_id: T1_front_left_horizontal
+      pixhawk_output: MAIN1
+      position: {x: 0.32, y: -0.22, z: 0.00}
+      direction: {x: 0.7071, y: 0.7071, z: 0.0}
+      type: thruster
+      reversed: false
+      neutral_pwm: 1500
+      min_pwm: 1100
+      max_pwm: 1900
+    - motor_id: T2_front_right_horizontal
+      pixhawk_output: MAIN2
+      position: {x: 0.32, y: 0.22, z: 0.00}
+      direction: {x: 0.7071, y: -0.7071, z: 0.0}
+      type: thruster
+      reversed: false
+      neutral_pwm: 1500
+      min_pwm: 1100
+      max_pwm: 1900
+    - motor_id: T3_rear_left_horizontal
+      pixhawk_output: MAIN3
+      position: {x: -0.32, y: -0.22, z: 0.00}
+      direction: {x: 0.7071, y: -0.7071, z: 0.0}
+      type: thruster
+      reversed: false
+      neutral_pwm: 1500
+      min_pwm: 1100
+      max_pwm: 1900
+    - motor_id: T4_rear_right_horizontal
+      pixhawk_output: MAIN4
+      position: {x: -0.32, y: 0.22, z: 0.00}
+      direction: {x: 0.7071, y: 0.7071, z: 0.0}
+      type: thruster
+      reversed: false
+      neutral_pwm: 1500
+      min_pwm: 1100
+      max_pwm: 1900
+    - motor_id: T5_front_left_vertical
+      pixhawk_output: MAIN5
+      position: {x: 0.25, y: -0.18, z: 0.00}
+      direction: {x: 0.0, y: 0.0, z: -1.0}
+      type: thruster
+      reversed: false
+      neutral_pwm: 1500
+      min_pwm: 1100
+      max_pwm: 1900
+    - motor_id: T6_front_right_vertical
+      pixhawk_output: MAIN6
+      position: {x: 0.25, y: 0.18, z: 0.00}
+      direction: {x: 0.0, y: 0.0, z: -1.0}
+      type: thruster
+      reversed: false
+      neutral_pwm: 1500
+      min_pwm: 1100
+      max_pwm: 1900
+    - motor_id: T7_rear_left_vertical
+      pixhawk_output: MAIN7
+      position: {x: -0.25, y: -0.18, z: 0.00}
+      direction: {x: 0.0, y: 0.0, z: -1.0}
+      type: thruster
+      reversed: false
+      neutral_pwm: 1500
+      min_pwm: 1100
+      max_pwm: 1900
+    - motor_id: T8_rear_right_vertical
+      pixhawk_output: MAIN8
+      position: {x: -0.25, y: 0.18, z: 0.00}
+      direction: {x: 0.0, y: 0.0, z: -1.0}
+      type: thruster
+      reversed: false
+      neutral_pwm: 1500
+      min_pwm: 1100
+      max_pwm: 1900
+  aux_out:
+    - motor_id: suction_motor_1
+      pixhawk_output: AUX1
+      position: {x: 0.42, y: -0.04, z: 0.00}
+      direction: {x: 1.0, y: 0.0, z: 0.0}
+      type: suction_motor
+      reversed: false
+      neutral_pwm: 1000
+      min_pwm: 1000
+      max_pwm: 2000
+    - motor_id: suction_motor_2
+      pixhawk_output: AUX2
+      position: {x: 0.42, y: 0.04, z: 0.00}
+      direction: {x: 1.0, y: 0.0, z: 0.0}
+      type: suction_motor
+      reversed: false
+      neutral_pwm: 1000
+      min_pwm: 1000
+      max_pwm: 2000
+    - motor_id: capture_servo
+      pixhawk_output: AUX3
+      position: {x: 0.42, y: 0.0, z: 0.00}
+      direction: {x: 0.0, y: 0.0, z: 0.0}
+      type: servo
+      reversed: false
+      neutral_pwm: 1500
+      min_pwm: 1000
+      max_pwm: 2000
+
+mixer:
+  command_pwm_span: 350
+  axes:
+    surge: 1.0
+    sway: 1.0
+    heave: 1.0
+    roll: 0.6
+    pitch: 0.6
+    yaw: 0.8

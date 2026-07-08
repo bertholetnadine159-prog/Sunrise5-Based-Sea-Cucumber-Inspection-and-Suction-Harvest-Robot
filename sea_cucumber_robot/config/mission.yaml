@@ -1,0 +1,20 @@
+mission:
+  loop_hz: 15
+  suction_duration_s: 5.0
+  max_state_duration_s:
+    INIT: 20
+    SEARCH_WITH_CAMERA_1: 180
+    ALIGN_WITH_CAMERA_1: 60
+    APPROACH_TO_5_5CM: 45
+    SWITCH_TO_CAMERA_2: 20
+    ALIGN_WITH_CAMERA_2: 30
+    SUCTION_CAPTURE: 10
+  emergency_stop_file: logs/EMERGENCY_STOP
+  require_manual_reset_after_estop: true
+  log_snapshot_every_s: 1.0
+
+faults:
+  max_consecutive_camera_failures: 20
+  max_consecutive_pixhawk_failures: 5
+  max_consecutive_sensor_failures: 20
+  allow_front_sonar_fault_after_switch: true

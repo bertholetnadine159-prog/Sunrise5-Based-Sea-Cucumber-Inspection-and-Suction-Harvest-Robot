@@ -1,0 +1,39 @@
+pixhawk:
+  enabled: true
+  connection: /dev/ttyACM0
+  baud: 115200
+  heartbeat_timeout_s: 3.0
+  command_timeout_s: 0.5
+  servo_command_hz: 20
+  simulation: false
+
+alignment:
+  camera_1:
+    horizontal_pid: {kp: 0.55, ki: 0.00, kd: 0.08, output_limit: 0.35}
+    vertical_pid: {kp: 0.30, ki: 0.00, kd: 0.04, output_limit: 0.20}
+    yaw_pid: {kp: 0.25, ki: 0.00, kd: 0.03, output_limit: 0.20}
+    stable_error_px: 35
+    stable_duration_s: 1.0
+  camera_2:
+    horizontal_pid: {kp: 0.45, ki: 0.00, kd: 0.06, output_limit: 0.25}
+    vertical_pid: {kp: 0.30, ki: 0.00, kd: 0.04, output_limit: 0.18}
+    yaw_pid: {kp: 0.20, ki: 0.00, kd: 0.02, output_limit: 0.15}
+    stable_error_px: 25
+    stable_duration_s: 0.8
+
+approach:
+  target_distance_m: 0.055
+  slow_zone_m: 0.16
+  max_forward_command: 0.22
+  min_forward_command: 0.06
+  distance_tolerance_m: 0.008
+  hold_time_s: 0.4
+
+search:
+  surge_command: 0.04
+  yaw_scan_command: 0.08
+
+suction:
+  power_percent: 50
+  low_speed_surge: 0.05
+  servo_safe_pwm: 1500

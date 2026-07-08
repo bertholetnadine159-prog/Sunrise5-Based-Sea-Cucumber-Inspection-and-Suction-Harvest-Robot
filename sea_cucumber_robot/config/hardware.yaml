@@ -1,0 +1,99 @@
+robot:
+  name: sea_cucumber_suction_robot
+  platform: RDK_X5
+  flight_controller: Pixhawk 2.4.8
+
+runtime:
+  simulation: false
+  sensor_poll_hz: 10
+  camera_poll_hz: 15
+
+rdk_x5:
+  # The bus ids below are practical defaults and must be verified on the target
+  # RDK_X5 image with `ls /dev/i2c-*` and `i2cdetect -y <bus>`.
+  i2c:
+    veml7700_1:
+      enabled: true
+      name: veml7700_front_light
+      bus: 5
+      address: 0x10
+      sda_pin: 3
+      scl_pin: 5
+    veml7700_2:
+      enabled: true
+      name: veml7700_down_light
+      bus: 0
+      address: 0x10
+      sda_pin: 27
+      scl_pin: 28
+    ms5837_30ba:
+      enabled: true
+      name: ms5837_depth
+      bus: 1
+      address: 0x76
+      alternate_address: 0x77
+      sda_pin: 31
+      scl_pin: 32
+      model: MS5837-30BA
+      fluid_density_kg_m3: 1029.0
+  one_wire:
+    ds18b20_1:
+      enabled: true
+      name: ds18b20_water_1
+      data_pin: 11
+      gpio: 17
+      device_id: null
+      sysfs_root: /sys/bus/w1/devices
+    ds18b20_2:
+      enabled: true
+      name: ds18b20_water_2
+      # Ambiguity from wiring notes:
+      # - PIN17 may be only the power pin.
+      # - PIN13(GPIO27) is treated as the default DATA line in code.
+      # Do not assume the physical wiring is correct until it is checked.
+      power_pin: 17
+      data_pin: 13
+      gpio: 27
+      device_id: null
+      sysfs_root: /sys/bus/w1/devices
+
+ultrasonic_usb:
+  front:
+    enabled: true
+    name: ultrasonic_front_suction_mouth
+    role: front_distance_to_target
+    port: /dev/ttyUSB0
+    baudrate: 9600
+    protocol: ff_uart
+    timeout_s: 0.08
+    min_valid_m: 0.03
+    max_valid_m: 4.5
+    near_range_fault_below_m: 0.04
+  downward:
+    enabled: true
+    name: ultrasonic_downward_altitude
+    role: bottom_distance
+    port: /dev/ttyUSB1
+    baudrate: 9600
+    protocol: ff_uart
+    timeout_s: 0.08
+    min_valid_m: 0.03
+    max_valid_m: 4.5
+
+cameras:
+  camera_1:
+    enabled: true
+    role: front
+    device: 0
+    width: 1280
+    height: 720
+    fps: 30
+    default_open: true
+  camera_2:
+    enabled: true
+    role: suction_mouth
+    device: 1
+    width: 1280
+    height: 720
+    fps: 30
+    default_open: false

@@ -1,0 +1,24 @@
+segmenter:
+  backend: color_threshold
+  model_path: ../YOLO11_LBL.bin
+  rdk_yolo_script: ../2.py
+  confidence_threshold: 0.25
+  iou_threshold: 0.45
+  mask_threshold: 0.5
+  class_names: [sea_cucumber]
+  simulation_mask:
+    enabled: false
+    center_x_ratio: 0.52
+    center_y_ratio: 0.55
+    radius_ratio: 0.12
+  color_threshold:
+    # Debug fallback for bench tests. Replace with `backend: rdk_bin` or
+    # `backend: ultralytics` for real sea cucumber segmentation.
+    hsv_lower: [0, 20, 20]
+    hsv_upper: [35, 255, 255]
+    min_area_px: 300
+
+debug:
+  save_frames: false
+  output_dir: logs/vision
+  draw_overlay: true
