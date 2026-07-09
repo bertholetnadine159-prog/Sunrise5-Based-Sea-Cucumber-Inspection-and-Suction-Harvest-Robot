@@ -6,7 +6,7 @@
 
 | 设备 | 数量 | 物理/通信接口 | 配置节点 | 驱动文件 | 主要输出字段 |
 | --- | --- | --- | --- | --- | --- |
-| MS5837-30BA 压力/深度传感器 | 1 | I2C0，默认与 VEML7700_2 共用 27/28 | `rdk_x5.i2c.ms5837_30ba` | `src/sea_cucumber_robot/sensors/ms5837.py` | `pressure_mbar`, `temperature_c`, `depth_m` |
+| MS5837-30BA 压力/深度传感器 | 1 | 32/33 复用 I2C | `rdk_x5.i2c.ms5837_30ba` | `src/sea_cucumber_robot/sensors/ms5837.py` | `pressure_mbar`, `temperature_c`, `depth_m` |
 | VEML7700 光照传感器 | 2 | I2C | `rdk_x5.i2c.veml7700_1`, `rdk_x5.i2c.veml7700_2` | `src/sea_cucumber_robot/sensors/veml7700.py` | `lux`, `als_raw`, `white_raw` |
 | DS18B20 温度传感器 | 2 | 1-Wire sysfs | `rdk_x5.one_wire.ds18b20_1`, `rdk_x5.one_wire.ds18b20_2` | `src/sea_cucumber_robot/sensors/ds18b20.py` | `temperature_c` |
 | LO81MTW 水下超声波传感器 | 2 | USB 串口 | `ultrasonic_usb.front`, `ultrasonic_usb.downward` | `src/sea_cucumber_robot/sensors/ultrasonic_usb.py` | `distance_m`, `protocol` |
@@ -56,19 +56,24 @@ python3 scripts/check_sensors.py --simulate
 
 | 信号 | RDK_X5 40Pin BOARD 物理引脚 |
 | --- | --- |
-| SDA | PIN27 / I2C0_SDA |
-| SCL | PIN28 / I2C0_SCL |
+| SDA | PIN33 / 复用 I2C SDA |
+| SCL | PIN32 / 复用 I2C SCL |
 
-按提供的 RDK X5 40Pin 对照表，BOARD 物理引脚 32/33 分别是 PWM6/PWM7，不是硬件 I2C 引脚。因此 MS5837-30BA 不应在当前硬件 I2C 驱动下配置为 32/33。如果实物确实接在 32/33，只能按 GPIO 软件 I2C/bit-bang 方案另写驱动，不能直接使用当前 `smbus2` 驱动。
+按提供的 RDK X5 40Pin 对照表，BOARD 物理引脚 32/33 是可复用引脚。它们在默认功能中可能显示为 PWM/GPIO，但复用功能可以切到 I2C，因此 MS5837-30BA 可按 32/33 作为 I2C 传感器接入。
 
-RDK X5 40Pin 上可直接使用的硬件 I2C 通常是：
+注意事项：
 
-| I2C 总线 | SDA | SCL | 说明 |
-| --- | --- | --- | --- |
-| I2C5 | PIN3 | PIN5 | 当前默认给 VEML7700_1 |
-| I2C0 | PIN27 | PIN28 | 当前默认给 VEML7700_2，并与 MS5837-30BA 共用 |
+- 需要确认系统 pinmux/设备树已把 PIN32/PIN33 配置为 I2C 功能。
+- Linux 下实际 bus 号可能随系统镜像变化，默认配置写为 `bus: 1`，实机需用 `ls /dev/i2c-*` 和 `i2cdetect -y <bus>` 验证。
+- 如果 32/33 仍保持 PWM/GPIO 默认功能，`smbus2` 无法直接访问 MS5837。
 
-MS5837-30BA 地址为 `0x76` 或 `0x77`，VEML7700 地址为 `0x10`，两者可以共用同一条 I2C 总线。
+RDK X5 40Pin 上本项目使用的 I2C 接口：
+
+| 设备 | SDA | SCL | 默认 Linux bus | 说明 |
+| --- | --- | --- | --- | --- |
+| VEML7700_1 | PIN3 | PIN5 | `5` | I2C5 |
+| VEML7700_2 | PIN27 | PIN28 | `0` | I2C0 |
+| MS5837-30BA | PIN33 | PIN32 | `1` | 32/33 复用 I2C，需 pinmux |
 
 配置节点：
 
@@ -78,12 +83,13 @@ rdk_x5:
     ms5837_30ba:
       enabled: true
       name: ms5837_depth
-      bus: 0
+      bus: 1
       address: 0x76
       alternate_address: 0x77
-      sda_pin: 27
-      scl_pin: 28
-      shared_i2c_bus_with: veml7700_2
+      sda_pin: 33
+      scl_pin: 32
+      pinmux_required: true
+      pinmux_function: i2c
       model: MS5837-30BA
       fluid_density_kg_m3: 1029.0
 ```

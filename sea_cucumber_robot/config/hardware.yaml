@@ -29,17 +29,17 @@ rdk_x5:
     ms5837_30ba:
       enabled: true
       name: ms5837_depth
-      # MS5837-30BA is an I2C device. On the RDK X5 40-pin header, BOARD
-      # pins 32/33 are PWM6/PWM7, not hardware I2C pins. The safe hardware
-      # I2C choices exposed on the header are 3/5 (I2C5) or 27/28 (I2C0).
-      # This default shares I2C0 with VEML7700_2; addresses 0x76/0x77 and
-      # 0x10 do not conflict.
-      bus: 0
+      # MS5837-30BA is an I2C device. According to the RDK X5 40-pin
+      # multiplexing table, BOARD pins 32/33 can be used as an I2C pair after
+      # pinmux is configured for the I2C function. Verify the Linux bus number
+      # with `ls /dev/i2c-*` and `i2cdetect -y <bus>` on the target image.
+      bus: 1
       address: 0x76
       alternate_address: 0x77
-      sda_pin: 27
-      scl_pin: 28
-      shared_i2c_bus_with: veml7700_2
+      sda_pin: 33
+      scl_pin: 32
+      pinmux_required: true
+      pinmux_function: i2c
       model: MS5837-30BA
       fluid_density_kg_m3: 1029.0
   one_wire:
