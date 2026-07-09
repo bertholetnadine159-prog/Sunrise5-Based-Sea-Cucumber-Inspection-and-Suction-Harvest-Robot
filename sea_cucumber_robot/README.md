@@ -17,6 +17,10 @@
 
 已公开接口包括 MS5837-30BA、两路 LO81MTW 水下超声、两路 VEML7700、两路 DS18B20 和两路 USB 摄像头。
 
+RDK X5 接线核对表和实机运行步骤：
+
+[docs/rdk_x5_wiring_and_run.md](docs/rdk_x5_wiring_and_run.md)
+
 ## 目录结构
 
 ```text
