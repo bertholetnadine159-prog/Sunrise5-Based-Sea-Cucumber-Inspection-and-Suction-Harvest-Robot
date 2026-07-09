@@ -6,7 +6,7 @@
 
 | 设备 | 数量 | 物理/通信接口 | 配置节点 | 驱动文件 | 主要输出字段 |
 | --- | --- | --- | --- | --- | --- |
-| MS5837-30BA 压力/深度传感器 | 1 | I2C | `rdk_x5.i2c.ms5837_30ba` | `src/sea_cucumber_robot/sensors/ms5837.py` | `pressure_mbar`, `temperature_c`, `depth_m` |
+| MS5837-30BA 压力/深度传感器 | 1 | I2C0，默认与 VEML7700_2 共用 27/28 | `rdk_x5.i2c.ms5837_30ba` | `src/sea_cucumber_robot/sensors/ms5837.py` | `pressure_mbar`, `temperature_c`, `depth_m` |
 | VEML7700 光照传感器 | 2 | I2C | `rdk_x5.i2c.veml7700_1`, `rdk_x5.i2c.veml7700_2` | `src/sea_cucumber_robot/sensors/veml7700.py` | `lux`, `als_raw`, `white_raw` |
 | DS18B20 温度传感器 | 2 | 1-Wire sysfs | `rdk_x5.one_wire.ds18b20_1`, `rdk_x5.one_wire.ds18b20_2` | `src/sea_cucumber_robot/sensors/ds18b20.py` | `temperature_c` |
 | LO81MTW 水下超声波传感器 | 2 | USB 串口 | `ultrasonic_usb.front`, `ultrasonic_usb.downward` | `src/sea_cucumber_robot/sensors/ultrasonic_usb.py` | `distance_m`, `protocol` |
@@ -54,10 +54,21 @@ python3 scripts/check_sensors.py --simulate
 
 硬件连接：
 
-| 信号 | RDK_X5 引脚 |
+| 信号 | RDK_X5 40Pin BOARD 物理引脚 |
 | --- | --- |
-| SDA | PIN31 |
-| SCL | PIN32 |
+| SDA | PIN27 / I2C0_SDA |
+| SCL | PIN28 / I2C0_SCL |
+
+按提供的 RDK X5 40Pin 对照表，BOARD 物理引脚 32/33 分别是 PWM6/PWM7，不是硬件 I2C 引脚。因此 MS5837-30BA 不应在当前硬件 I2C 驱动下配置为 32/33。如果实物确实接在 32/33，只能按 GPIO 软件 I2C/bit-bang 方案另写驱动，不能直接使用当前 `smbus2` 驱动。
+
+RDK X5 40Pin 上可直接使用的硬件 I2C 通常是：
+
+| I2C 总线 | SDA | SCL | 说明 |
+| --- | --- | --- | --- |
+| I2C5 | PIN3 | PIN5 | 当前默认给 VEML7700_1 |
+| I2C0 | PIN27 | PIN28 | 当前默认给 VEML7700_2，并与 MS5837-30BA 共用 |
+
+MS5837-30BA 地址为 `0x76` 或 `0x77`，VEML7700 地址为 `0x10`，两者可以共用同一条 I2C 总线。
 
 配置节点：
 
@@ -67,11 +78,12 @@ rdk_x5:
     ms5837_30ba:
       enabled: true
       name: ms5837_depth
-      bus: 1
+      bus: 0
       address: 0x76
       alternate_address: 0x77
-      sda_pin: 31
-      scl_pin: 32
+      sda_pin: 27
+      scl_pin: 28
+      shared_i2c_bus_with: veml7700_2
       model: MS5837-30BA
       fluid_density_kg_m3: 1029.0
 ```
