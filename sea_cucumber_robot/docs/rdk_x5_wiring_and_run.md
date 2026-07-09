@@ -48,6 +48,65 @@ pip install -r requirements.txt
 
 如果 RDK X5 已经有系统级 OpenCV、Horizon 或 D-Robotics 推理环境，也可以按系统镜像习惯使用系统 Python，但要保证 `numpy`、`opencv-python`、`PyYAML`、`pyserial`、`pymavlink`、`smbus2` 可导入。
 
+## 离线复制项目文件
+
+如果 RDK X5 下载 GitHub 很慢，可以直接把本地文件复制到 RDK X5。推荐复制整个仓库目录，最省事，也不容易漏模型和脚本：
+
+```text
+Sunrise5-Based-Sea-Cucumber-Inspection-and-Suction-Harvest-Robot/
+├── README.md
+├── .gitignore
+├── LICENSE
+├── 2.py
+├── YOLO11_LBL.bin
+├── sea_cucumber_robot/
+├── rdk_x5_i2c_sensor_gui.py
+├── rdk_x5_ms5837_test.py
+├── ms5837_read.py
+├── veml7700_read.py
+├── l08_test.py
+└── pixhawk_direct_water_visualize.py
+```
+
+最小运行集合如下：
+
+| 运行目标 | 必须复制 |
+| --- | --- |
+| 运行完整机器人程序 | `sea_cucumber_robot/` |
+| 使用 RDK BIN 海参分割模型 | `sea_cucumber_robot/`、`YOLO11_LBL.bin`、`2.py` |
+| 调试 I2C 传感器 | `sea_cucumber_robot/`、`rdk_x5_i2c_sensor_gui.py`、`rdk_x5_ms5837_test.py`、`ms5837_read.py`、`veml7700_read.py` |
+| 调试 LO81MTW 超声波 | `sea_cucumber_robot/`、`l08_test.py` |
+| 调试 Pixhawk 数据 | `sea_cucumber_robot/`、`pixhawk_direct_water_visualize.py` |
+
+不要复制这些运行产物：
+
+```text
+.venv/
+__pycache__/
+logs/*.log
+seg_results/
+outputs/
+*.mp4
+*.avi
+```
+
+如果从 U 盘复制到 RDK X5 桌面，可以这样放置：
+
+```bash
+mkdir -p ~/桌面/sea_robot
+cp -r /media/$USER/<U盘名称>/Sunrise5-Based-Sea-Cucumber-Inspection-and-Suction-Harvest-Robot/* ~/桌面/sea_robot/
+cd ~/桌面/sea_robot/sea_cucumber_robot
+```
+
+随后安装依赖并运行：
+
+```bash
+python3 -m venv .venv
+source .venv/bin/activate
+pip install -r requirements.txt
+python3 scripts/check_sensors.py --simulate
+```
+
 ## I2C 传感器检查
 
 先确认系统暴露了哪些 I2C bus：
@@ -83,6 +142,23 @@ sudo i2cdetect -y 1
 - 先确认 MS5837 的 SDA/SCL 接到 `PIN33/PIN32`。
 - 确认 RDK X5 的 `PIN32/PIN33` 已切到 I2C 复用功能，而不是 PWM/GPIO。
 - 如果实际 bus 不是 `1`，把 `config/hardware.yaml` 中 `rdk_x5.i2c.ms5837_30ba.bus` 改为实测 bus。
+
+如果 `sudo i2cdetect -y 1` 输出中没有 `76` 或 `77`，但系统存在 `/dev/i2c-0` 到 `/dev/i2c-8`，先扫描所有 bus：
+
+```bash
+for dev in /dev/i2c-*; do
+  bus=${dev#/dev/i2c-}
+  echo "===== i2c-$bus ====="
+  sudo i2cdetect -y -r "$bus"
+done
+```
+
+判读方式：
+
+- 看到 `76` 或 `77`：MS5837 已响应，把 `config/hardware.yaml` 中 `rdk_x5.i2c.ms5837_30ba.bus` 改成对应 bus。
+- 任何 bus 都看不到 `76/77`：优先检查 `PIN32/PIN33` 的 pinmux、传感器 3.3 V 供电、GND 共地、SDA/SCL 是否接反、线缆和水密接头。
+- `Warning: Can't use SMBus Quick Write command` 不是 MS5837 未识别的原因，只表示当前适配器不支持 SMBus quick write，使用 `-r` 扫描即可减少这个提示。
+- 表格里 `--` 表示该地址没有设备响应，`UU` 表示该地址已被内核驱动占用。
 
 ## DS18B20 检查
 
