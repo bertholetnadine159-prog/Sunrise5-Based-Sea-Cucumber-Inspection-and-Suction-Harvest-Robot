@@ -16,6 +16,14 @@ Team: Shenhai Electromagnetic Force
 
 系统围绕“端侧 AI 检测、视觉对中、超声测距接近、近距离吸捕、环境数据记录、Pixhawk 输出控制”构建，可配合上位机管理界面和模型转换仓库组成完整开源方案。
 
+## 传感器接口文档
+
+传感器硬件连接、通信协议、配置节点、驱动文件和输出字段已开放在文档中：
+
+[sea_cucumber_robot/docs/sensor_interfaces.md](sea_cucumber_robot/docs/sensor_interfaces.md)
+
+已公开接口包括 MS5837-30BA、两路 LO81MTW 水下超声、两路 VEML7700、两路 DS18B20 和两路 USB 摄像头。
+
 ## 完整工程入口
 
 建议优先使用完整工程目录：
@@ -23,6 +31,7 @@ Team: Shenhai Electromagnetic Force
 ```text
 sea_cucumber_robot/
 ├── config/                 # 硬件、输出、视觉、控制和任务参数
+├── docs/                   # 传感器接口等开源文档
 ├── src/sea_cucumber_robot/ # Python 机器人软件包
 ├── scripts/                # 运行与硬件检查脚本
 ├── tests/                  # 核心逻辑单元测试

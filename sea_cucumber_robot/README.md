@@ -9,11 +9,20 @@
 
 本项目面向 RDK_X5 + Pixhawk 2.4.8 的水下海参检测及负压吸捕机器人，包含传感器读取、摄像头管理、海参分割检测、mask 对中、推进器混控、Pixhawk MAVLink 输出、吸捕电机控制和自动任务状态机。
 
+## 传感器接口文档
+
+传感器硬件连接、通信协议、配置节点、驱动文件和输出字段已开放在文档中：
+
+[docs/sensor_interfaces.md](docs/sensor_interfaces.md)
+
+已公开接口包括 MS5837-30BA、两路 LO81MTW 水下超声、两路 VEML7700、两路 DS18B20 和两路 USB 摄像头。
+
 ## 目录结构
 
 ```text
 sea_cucumber_robot/
 ├── config/                 # 所有硬件、输出、视觉、控制和任务参数
+├── docs/                   # 传感器接口等开源文档
 ├── src/sea_cucumber_robot/ # 可运行 Python 包
 ├── scripts/                # 上机运行和硬件检查脚本
 ├── tests/                  # 核心逻辑单元测试
